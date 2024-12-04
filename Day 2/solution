@@ -1,0 +1,70 @@
+import math
+import os
+import sys
+
+file = open(os.path.join(sys.path[0], "input.txt"), "r")
+
+lines = []
+p1 = 0
+p2 = 0
+
+l1 = []
+l2 = []
+
+counter = {}
+
+def parse(line):
+    parts = list(map(int, line.split()))
+
+    return parts
+
+def isSafe(nums):
+    inc = nums[1] > nums[0]
+    safe = True
+
+    prob = -1
+
+    for i in range(1, len(nums)):
+        a, b = nums[i], nums[i - 1]
+
+        if not (1 <= abs(a  - b) <= 3 and a > b != inc):
+            safe = False
+            prob = i - 1
+            return False, prob
+
+    return safe, prob
+
+
+for line in file.readlines():
+    line = line.strip()
+
+    nums = parse(line)
+
+    safe, prob = isSafe(nums)
+
+    if safe:
+        p1 += 1
+        p2 += 1
+    else:
+        new = nums.copy()
+        del new[prob]
+        safe, _ = isSafe(new)
+
+        new2 = nums.copy()
+        del new2[prob + 1]
+        safe2, _ = isSafe(new2)
+
+        new3 = nums.copy()
+        del new3[0]
+        safe3, _ = isSafe(new3)
+        if safe or safe2 or safe3:
+            p2 += 1
+            print(nums)
+            if safe:
+                print(new)
+            else:
+                print(new2)
+            print()
+
+print(p1)
+print(p2)

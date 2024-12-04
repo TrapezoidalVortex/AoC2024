@@ -1,0 +1,62 @@
+import math
+import os
+import sys
+
+file = open(os.path.join(sys.path[0], "input.txt"), "r")
+
+p1 = 0
+p2 = 0
+
+dirs = [(1, 1), (0, 1), (1, 0), (1, -1)]
+dirs2 = [(1, 1), (-1, 1)]
+
+word = "XMAS"
+wordrev = "SAMX"
+
+mas = "MAS"
+masrev = "SAM"
+
+grid = []
+
+for line in file.readlines():
+    line = line.strip()
+    grid.append(line)
+
+for x in range(len(grid[0])):
+    for y in range(len(grid)):
+        for dx, dy in dirs:
+            nx = x
+            ny = y
+
+            seen = grid[y][x]
+
+            for i in range(len(word) - 1):
+                nx += dx
+                ny += dy
+
+                if 0 <= nx < len(grid[0]) and 0 <= ny < len(grid):
+                    seen += grid[ny][nx]
+                else:
+                    break
+
+            if seen == word or seen == wordrev:
+                p1 += 1
+
+        poss = True
+        for dx, dy in dirs2:
+            seen = grid[y][x]
+            if 0 < x < len(grid[0]) - 1 and 0 < y < len(grid) - 1 and poss:
+                seen += grid[y + dy][x + dx]
+                seen = grid[y - dy][x - dx] + seen
+
+                if seen != mas and seen != masrev:
+                    poss = False
+            else:
+                poss = False
+
+        if poss:
+            p2 += 1
+
+
+print(p1)
+print(p2)

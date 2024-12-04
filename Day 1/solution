@@ -1,0 +1,44 @@
+import math
+import os
+import sys
+
+file = open(os.path.join(sys.path[0], "input.txt"), "r")
+
+lines = []
+p1 = 0
+p2 = 0
+
+l1 = []
+l2 = []
+
+counter = {}
+
+def parse(line):
+    parts = list(map(int, line.strip().split()))
+
+    return parts[0], parts[1]
+
+for line in file.readlines():
+    line = line.strip()
+
+    first, second = parse(line)
+
+    l1.append(first)
+    l2.append(second)
+
+    if second in counter:
+        counter[second] += 1
+    else:
+        counter[second] = 1
+
+l1 = sorted(l1)
+l2 = sorted(l2)
+
+for i in range(len(l1)):
+    p1 += abs(l1[i] - l2[i])
+
+    if l1[i] in counter:
+        p2 += l1[i] * counter[l1[i]]
+
+print(p1)
+print(p2)

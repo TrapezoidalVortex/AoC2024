@@ -1,0 +1,95 @@
+import math
+import os
+import sys
+
+file = open(os.path.join(sys.path[0], "input.txt"), "r")
+
+lines = []
+p1 = 0
+p2 = 0
+
+l1 = []
+l2 = []
+
+counter = {}
+
+instr = "mul(`,`)"
+
+enableInstr = "do()"
+disableInstr = "don't()"
+
+def parse(line):
+    parts = list(map(int, line.strip().split()))
+
+    return parts[0], parts[1]
+
+mem = ""
+
+for line in file.readlines():
+    line = line.strip()
+    mem += line
+
+
+a = ""
+b = ""
+currInd = 0
+
+full = ""
+
+length = len(mem)
+i = 0
+
+while i < len(mem):
+    enabled = mem.rfind(enableInstr, 0, i) >= mem.rfind(disableInstr, 0, i)
+
+    c = mem[i]
+    if instr[currInd] == c:
+        currInd += 1
+    elif currInd == 4 or currInd == 5:
+        if c.isnumeric() and len(a) < 3:
+            a += c
+            currInd = 5
+        else:
+            a = ""
+            b = ""
+            currInd = 0
+            i -= 1
+    elif currInd == 6 or currInd == 7:
+        if c.isnumeric() and len(b) < 3:
+            b += c
+            currInd = 7
+        else:
+            a = ""
+            b = ""
+            currInd = 0
+            i -= 1
+    else:
+        a = ""
+        b = ""
+        currInd = 0
+
+        if currInd > 0:
+            i -= 1
+
+    if currInd == 8:
+        if a and b:
+            print(a, b)
+
+            p1 += int(a) * int(b)
+
+            if enabled:
+                p2 += int(a) * int(b)
+            a = ""
+            b = ""
+            currInd = 0
+        else:
+            a = ""
+            b = ""
+            currInd = 0
+            i -= 1
+    i += 1
+
+
+
+print(p1)
+print(p2)
